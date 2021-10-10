@@ -1,0 +1,246 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'de.undercouch.download' version '4.1.2'
+}
+
+group 'com.pocolifo'
+version '1.0.0'
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.ow2.asm:asm-commons:9.2'
+    implementation 'commons-io:commons-io:2.11.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                name = 'JAR Remapper'
+                description = 'Library for remapping JARs'
+                artifactId = 'jarremapper'
+
+                licenses {
+                    license {
+                        name = 'Mozilla Public License 2.0'
+                        url = 'https://www.mozilla.org/en-US/MPL/2.0/'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'youngermax'
+                    }
+                }
+            }
+
+            from components.java
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+final legacyYarnVersion = '1.8.9+build.202110031151'
+
+final resources = new File('src/test/resources')
+final mappings = new File(resources, 'mappings')
+final mcp = new File(mappings, 'mcp')
+
+final mcp_189 = new File(mcp, '1.8.9')
+final yarn1 = new File(mappings, 'yarn')
+final yarn2merged = new File(mappings, 'yarnv2')
+
+task setupDirectories {
+    mcp_189.mkdirs()
+    yarn1.mkdirs()
+    yarn2merged.mkdirs()
+}
+
+// minecraft 1.8.9
+task mcpMappings189(dependsOn: setupDirectories) {
+    final csv = new File(mcp_189, 'stable.zip')
+    final srg = new File(mcp_189, 'srg.zip')
+
+    // csv: params.csv, fields.csv, methods.csv
+    download {
+        src 'https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp_stable/22-1.8.9/mcp_stable-22-1.8.9.zip'
+        dest csv
+        overwrite false
+    }
+
+    copy {
+        from zipTree(csv)
+        into mcp_189
+    }
+
+    delete csv
+
+    // srg: joined.srg. joined.exc
+    download {
+        src 'https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp/1.8.9/mcp-1.8.9-srg.zip'
+        dest srg
+        overwrite false
+    }
+
+
+
+    copy {
+        from zipTree(srg).matching {
+            include 'joined.srg', 'joined.exc'
+        }
+        into mcp_189
+    }
+
+    delete srg
+}
+
+task yarn189(dependsOn: setupDirectories) {
+    final yarn1_dest = new File(yarn1, legacyYarnVersion + '.jar')
+    final yarn2_dest = new File(yarn2merged, legacyYarnVersion + '-mergedv2.jar')
+
+    // yarn v1
+    download {
+        src 'https://maven.legacyfabric.net/net/fabricmc/yarn/' + legacyYarnVersion + '/yarn-' + legacyYarnVersion + '.jar'
+        dest yarn1_dest
+        overwrite true
+    }
+
+    copy {
+        from zipTree(yarn1_dest).filter {
+            it.isFile() && it.name == 'mappings.tiny'
+        }.singleFile
+
+        into yarn1
+
+        rename {
+            'mappings.tiny'
+            'mappings-1.8.9.tiny'
+        }
+    }
+
+    delete yarn1_dest
+
+    // yarn v2 merged
+    download {
+        src 'https://maven.legacyfabric.net/net/fabricmc/yarn/' + legacyYarnVersion + '/yarn-' + legacyYarnVersion + '-mergedv2.jar'
+        dest yarn2_dest
+        overwrite true
+    }
+
+    copy {
+        from zipTree(yarn2_dest).filter {
+            it.isFile() && it.name == 'mappings.tiny'
+        }.singleFile
+
+        into yarn2merged
+
+        rename {
+            'mappings.tiny'
+            'mappings-merged-v2-1.8.9.tiny'
+        }
+    }
+
+    delete yarn2_dest
+}
+
+task minecraft189(type: Download, dependsOn: setupDirectories) {
+    src 'https://launcher.mojang.com/v1/objects/3870888a6c3d349d3771a3e9d16c9bf5e076b908/client.jar'
+    dest new File(resources, 'minecraft-1.8.9.jar')
+    overwrite true
+}
+
+task setup189 {
+    dependsOn setupDirectories
+    dependsOn mcpMappings189
+    dependsOn yarn189
+    dependsOn minecraft189
+}
+
+// minecraft latest
+// updated to 1.17.1
+final String yarn = '1.17.1+build.61'
+final String mc = '1.17.1'
+
+task minecraftLatest(type: Download, dependsOn: setupDirectories) {
+    // needs to be updated
+    src 'https://launcher.mojang.com/v1/objects/8d9b65467c7913fcf6f5b2e729d44a1e00fde150/client.jar'
+    dest new File(resources, 'minecraft-' + mc + '.jar')
+    overwrite true
+}
+
+task yarnLatest(dependsOn: setupDirectories) {
+    final yarn1_dest = new File(yarn1, yarn + '.jar')
+    final yarn2_dest = new File(yarn2merged, yarn + '-mergedv2.jar')
+
+    // yarn v1
+    download {
+        src 'https://maven.fabricmc.net/net/fabricmc/yarn/' + yarn + '/yarn-' + yarn + '.jar'
+        dest yarn1_dest
+        overwrite true
+    }
+
+    copy {
+        from zipTree(yarn1_dest).filter {
+            it.isFile() && it.name == 'mappings.tiny'
+        }.singleFile
+
+        into yarn1
+
+        rename {
+            'mappings.tiny'
+            'mappings-' + mc + '.tiny'
+        }
+    }
+
+    delete yarn1_dest
+
+    // yarn v2 merged
+    download {
+        src 'https://maven.fabricmc.net/net/fabricmc/yarn/' + yarn + '/yarn-' + yarn + '-mergedv2.jar'
+        dest yarn2_dest
+        overwrite true
+    }
+
+    copy {
+        from zipTree(yarn2_dest).filter {
+            it.isFile() && it.name == 'mappings.tiny'
+        }.singleFile
+
+        into yarn2merged
+
+        rename {
+            'mappings.tiny'
+            'mappings-merged-v2-' + mc + '.tiny'
+        }
+    }
+
+    delete yarn2_dest
+}
+
+task setupLatest {
+    dependsOn setupDirectories
+    dependsOn minecraftLatest
+    dependsOn yarnLatest
+}
+
+// setup all
+task setup {
+    dependsOn setup189
+    dependsOn setupLatest
+}

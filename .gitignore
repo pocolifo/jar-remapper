@@ -1,0 +1,9 @@
+.gradle/
+.idea/
+build/
+*.iml
+
+/output.jar
+
+src/test/resources/mappings
+src/test/resources/minecraft-*
