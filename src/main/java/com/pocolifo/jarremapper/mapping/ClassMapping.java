@@ -21,9 +21,6 @@ public class ClassMapping {
     // method mappings inside this class
     public final List<MethodMapping> methodMappings = new ArrayList<>();
 
-    // TODO: Implement inner class mappings
-    // public final List<ClassMapping> innerClassMappings = new ArrayList<>();
-
     public MethodMapping getMethodByFromName(String fromName, String fromDesc) {
         for (MethodMapping methodMapping : this.methodMappings) {
             if (methodMapping.fromMethodName.equals(fromName)) {
@@ -34,8 +31,6 @@ public class ClassMapping {
                 }
             }
         }
-
-
 
         return null;
     }

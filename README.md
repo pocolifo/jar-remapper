@@ -4,117 +4,85 @@ Making remapping JARs easy, organized, and painless
 
 ## Features
 
+#### Remapping Engines
+- Multiple different engines to remap JARs
+- StandardRemappingEngine by the devs of JAR Remapper
+- FabricMC's TinyRemapper using a Remapping Engine (*requires extension dependency*)
+
 #### Remapping
 - Class remapping
 - Method remapping
 - Field remapping
 - Parameter remapping
 
-#### Common Minecraft mapping formats
-- Built-in SRG/MCP mapping support
-- Built-in Yarn v1 & v2-merged mapping support
+#### Common mapping formats
+- Built-in ModCoderPack's SRG/MCP mapping support
+- Built-in Tiny v1/v2 mapping support
 
 #### Flexible API
-- Remapping plugins
-- Automatically exclude `META-INF` directory from output JAR
-- Read your own mappings
+- Custom Mapping Readers
+- Custom Remapping Engines
 
 ## Coming Soon
-
-- Local variable remapping
 - Built-in Proguard mapping support
-- Multithreaded remapping
+
 
 # Getting Started
 
-Simply read some mappings
+Load in your favorite mapping format
 
 ```java
-// mcp mappings
-McpMappingReader reader = new McpMappingReader(
-        new File("joined.srg"),
-        new File("joined.exc"),
+JarMapping mappings;
 
-        new File("methods.csv"),
-        new File("fields.csv"),
-        new File("params.csv")
-);
+// MCP mappings
+mappings = new McpMappingReader(
+    new File("joined.srg"),
+    new File("joined.exc"),
 
-// yarn v1 mappings
-YarnV1MappingReader reader = new YarnV1MappingReader(
-    new File("mappings-1.17.1.tiny")
-);
+    new File("methods.csv"),
+    new File("fields.csv"),
+    new File("params.csv")
+).read();
 
-// yarn v2 merged mappings
-YarnMergedV2MappingReader reader = new YarnMergedV2MappingReader(
-    new File("mappings-merged-v2-1.17.1.tiny")
-);
+// Tiny v1 mappings
+mappings = new Tiny1MappingReader(
+    new File("mappings-tiny-v1.tiny")
+).read("remapFromThisNamespace", "remapToThisNamespace");
 
-// read the mappings
-JarMapping jarMapping = reader.read();
+// Tiny v2 mappings
+mappings = new Tiny2MappingReader(
+    new File("mappings-tiny-v2.tiny")
+).read("remapFromThisNamespace", "remapToThisNamespace");
 ```
 
-Then, remap the JAR like so
-
-```java 
-JarRemapper.newBuilder()
-   // (required)
-   // Set input (not remapped) JAR
-   .setInputFile(new File("minecraft.jar"))
-   
-   // (required)
-   // Read and set the mappings we will remap with
-   .setJarMapping(jarMapping)
-   
-   // (required)
-   // Set the output (remapped) JAR
-   .setOutputFile(new File("minecraft-deobfuscated.jar"))
-   
-   // (optional)        
-   // Set a remapping plugin (see SimpleProgressListener above)
-   .setRemappingPlugin(new SimpleProgressListener())
-   
-   // (optional)
-   // Exclude the META-INF directory from the output JAR
-   .excludeMetaInf()
-   
-   // Remap the JAR!
-   .remap();
-```
-
-# Code snippets
-
-Simple remapping plugin for tracking progress
+With your mappings, remap your JAR file
 
 ```java
-import com.pocolifo.jarremapper.mapping.ClassMapping;
-import com.pocolifo.jarremapper.plugin.IRemappingPlugin;
-
-import java.util.zip.ZipFile;
-
-public class SimpleProgressListener implements IRemappingPlugin {
-
-   @Override
-   public void onBeginRemap(ZipFile remappingJar) {
-      System.out.println("Beginning remap");
-   }
-
-   @Override
-   public void onBeforeRemapClass(ClassMapping classMapping) {
-      System.out.println("Just about to remap a class...");
-   }
-
-   @Override
-   public void onAfterRemapClass(ClassMapping classRemapped) {
-      System.out.println("Just finished remapping a class!");
-   }
-
-   @Override
-   public void onDoneRemap() {
-      System.out.println("All classes remapped!");
-   }
-
-}
+JarRemapper.newRemap()
+    // (required)
+    // The JAR to be remap
+    .withInputFile(new File("input.jar"))
+    
+    // (required)
+    // The output of the remapped JAR
+    .withOutputFile(new File("output.jar"))
+    
+    // (required)
+    // The mappings to remap the JAR with
+    .withMappings(mappings)
+        
+    // (optional)
+    // The Remapping Engine to remap the JAR with
+    // default: StandardRemappingEngine
+    .withRemappingEngine(new StandardRemappingEngine())
+        
+    // (optional)
+    // Automatically deletes the output file before remapping
+    // default: false
+    .overwriteOutputFile()
+    
+    // Begin remapping the JAR!
+    .remap();
 ```
 
 # Develop

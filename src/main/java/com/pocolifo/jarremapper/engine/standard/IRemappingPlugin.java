@@ -1,4 +1,4 @@
-package com.pocolifo.jarremapper.plugin;
+package com.pocolifo.jarremapper.engine.standard;
 
 import com.pocolifo.jarremapper.mapping.ClassMapping;
 

@@ -1,7 +1,7 @@
-package com.pocolifo.jarremapper;
+package com.pocolifo.jarremapper.test;
 
 import com.pocolifo.jarremapper.mapping.ClassMapping;
-import com.pocolifo.jarremapper.plugin.IRemappingPlugin;
+import com.pocolifo.jarremapper.engine.standard.IRemappingPlugin;
 
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;

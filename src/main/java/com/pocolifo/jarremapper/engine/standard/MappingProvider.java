@@ -1,6 +1,5 @@
-package com.pocolifo.jarremapper.remap;
+package com.pocolifo.jarremapper.engine.standard;
 
-import com.pocolifo.jarremapper.JarRemapper;
 import com.pocolifo.jarremapper.mapping.ClassMapping;
 import com.pocolifo.jarremapper.mapping.FieldMapping;
 import com.pocolifo.jarremapper.mapping.JarMapping;
@@ -13,11 +12,11 @@ import java.util.List;
 
 public class MappingProvider extends Remapper {
     private final JarMapping jarMapping;
-    private final JarRemapper jarRemapper;
+    private final StandardRemappingEngine jarRemapper;
 
     private final ClassNode currentClass;
 
-    public MappingProvider(JarMapping mapping, ClassNode currentClass, JarRemapper remapper) {
+    public MappingProvider(JarMapping mapping, ClassNode currentClass, StandardRemappingEngine remapper) {
         this.jarMapping = mapping;
         this.jarRemapper = remapper;
 

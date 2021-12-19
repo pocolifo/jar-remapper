@@ -1,15 +1,16 @@
-package com.pocolifo.jarremapper.reader;
-
-import com.pocolifo.jarremapper.mapping.FieldMapping;
-import com.pocolifo.jarremapper.mapping.JarMapping;
-import com.pocolifo.jarremapper.mapping.ClassMapping;
-import com.pocolifo.jarremapper.mapping.MethodMapping;
-import org.objectweb.asm.Type;
+package com.pocolifo.jarremapper.reader.mcp;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+
+import com.pocolifo.jarremapper.mapping.ClassMapping;
+import com.pocolifo.jarremapper.mapping.FieldMapping;
+import com.pocolifo.jarremapper.mapping.JarMapping;
+import com.pocolifo.jarremapper.mapping.MethodMapping;
+import com.pocolifo.jarremapper.reader.MappingUtility;
+import org.objectweb.asm.Type;
 
 public class McpMappingReader {
     private final File srgFile;
@@ -102,7 +103,6 @@ public class McpMappingReader {
     }
 
     private void readExc(JarMapping mapping) throws IOException {
-        // net/minecraft/block/BlockFlower$EnumFlowerColor.<init>(Ljava/lang/String;I)V=|p_i45716_1_,p_i45716_2_
         for (String line : Files.readAllLines(this.excFile.toPath())) {
             String[] split = line.split("=");
 
@@ -163,17 +163,14 @@ public class McpMappingReader {
             }
         }
 
-        // CL: rj net/minecraft/entity/ai/EntityAILookAtTradePlayer
         for (String[] fields : classEntries) {
             this.classes.put(fields[1], fields[2]);
         }
 
-        // FD: kl/b net/minecraft/server/dedicated/PropertyManager/field_73672_b
         for (String[] fields : fieldEntries) {
             this.fields.put(fields[1], fields[2]);
         }
 
-        // MD: ko/b ()Ljava/lang/String; net/minecraft/server/dedicated/DedicatedServer/func_71329_c ()Ljava/lang/String;
         for (String[] fields : methodEntries) {
             this.methods.put(fields[1] + " " + fields[2], fields[3] + " " + fields[4]);
         }

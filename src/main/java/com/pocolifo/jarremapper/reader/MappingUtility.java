@@ -1,6 +1,6 @@
 package com.pocolifo.jarremapper.reader;
 
-class MappingUtility {
+public class MappingUtility {
     public static String getNameAfterLastSlash(String str) {
         return str.substring(str.lastIndexOf("/") + 1);
     }
