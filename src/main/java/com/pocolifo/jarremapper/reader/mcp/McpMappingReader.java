@@ -115,6 +115,8 @@ public class McpMappingReader {
                 String methodDescriptor = split[0].substring(endMethodName);
 
                 ClassMapping cls = mapping.getClassByToName(className);
+                if (cls == null) continue;
+
                 MethodMapping method = cls.getMethodByToName(methodName, methodDescriptor);
 
                 if (method == null) {
