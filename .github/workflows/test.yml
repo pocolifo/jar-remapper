@@ -1,0 +1,15 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: gradle:jdk8
+    steps:
+      - uses: actions/checkout@v2
+        name: Check out
+
+      - run: gradle generateTests test
+        name: Test
