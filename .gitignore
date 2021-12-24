@@ -5,5 +5,5 @@ build/
 
 /output.jar
 
-src/test/resources/mappings
-src/test/resources/minecraft-*
+src/test/resources/*
+src/test/java/com/pocolifo/jarremapper/tests/*
