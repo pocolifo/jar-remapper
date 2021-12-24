@@ -1,0 +1,23 @@
+name: Publish
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    container:
+      image: gradle:jdk8
+    steps:
+      - uses: actions/checkout@v2
+        name: Check out
+
+      - run: gradle publishMavenPublicationToPocolifoRepository
+        name: Publish
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+          REPO_URL: ${{ secrets.REPO_URL }}
+          REPO_USERNAME: ${{ secrets.REPO_USERNAME }}
+          REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
