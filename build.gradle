@@ -1,11 +1,11 @@
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'com.pocolifo.jarremapper.devplugin' version '1.0-SNAPSHOT'
+	id 'com.pocolifo.jarremapper.devplugin' version '1.0.1'
 }
 
 group 'com.pocolifo'
-version '2.0.0'
+version '2.0.2'
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
