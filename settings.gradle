@@ -1,7 +1,7 @@
 pluginManagement {
     repositories {
         maven {
-            url 'https://maven.services.pocolifo.com'
+            url 'https://maven.services.pocolifo.com/releases'
             name 'Pocolifo'
         }
     }
