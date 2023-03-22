@@ -14,15 +14,11 @@ repositories {
     maven {
         url 'https://maven.fabricmc.net'
     }
-
-    maven {
-        url 'https://maven.services.pocolifo.com/releases'
-    }
 }
 
 dependencies {
-    implementation 'com.pocolifo:jarremapper:2.0.2'
-    implementation 'net.fabricmc:tiny-remapper:0.8.1'
+    implementation project(':com.pocolifo.jarremapper')
+    implementation 'net.fabricmc:tiny-remapper:0.8.6'
     implementation 'net.md-5:SpecialSource:1.11.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
@@ -32,31 +28,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-//jarremapper {
-//    mappings = [
-//            'mcp/stable/1.8.9/22',
-//            'legacyfabric/1.8.9/202112162000',
-//            'fabric/1.18.1/1'
-//    ]
-//
-//    minecraft = ['client/1.8.9/3870888a6c3d349d3771a3e9d16c9bf5e076b908',
-//                 'client/1.18.1/7e46fb47609401970e2818989fa584fd467cd036']
-//
-//    readers = ['com.pocolifo.jarremapper.reader.mcp.McpMappingReader/.read()/mcp': ['joined.srg', 'joined.exc', 'methods.csv', 'fields.csv', 'params.csv'],
-//               'com.pocolifo.jarremapper.reader.tiny.Tiny1MappingReader/.read(\"official\", \"named\")/fabric+legacyfabric': ['mappings.tiny'],
-//               'com.pocolifo.jarremapper.reader.tiny.Tiny2MappingReader/.read(\"official\", \"named\")/fabric+legacyfabric': ['mappings-merged.tiny']]
-//
-//    engines = [
-//            // Tiny remapper
-//            'com.pocolifo.jarremapper.extensions.TinyRemapperEngine/new TinyRemapperEngine().setOptions(net.fabricmc.tinyremapper.TinyRemapper.newRemapper().ignoreConflicts(true))',
-//            'com.pocolifo.jarremapper.extensions.TinyRemapperEngine/new TinyRemapperEngine().setOptions(net.fabricmc.tinyremapper.TinyRemapper.newRemapper().ignoreConflicts(true)).excludeMetaInf()',
-//
-//            // Special source
-//            'com.pocolifo.jarremapper.extensions.SpecialSourceEngine/new SpecialSourceEngine()',
-//            'com.pocolifo.jarremapper.extensions.SpecialSourceEngine/new SpecialSourceEngine().excludeMetaInf()'
-//    ]
-//}
 
 publishing {
     publications {
