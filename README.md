@@ -91,6 +91,6 @@ JarRemapper.newRemap()
 2. Import the project into IntelliJ IDEA
 
 ### To test
-1. Edit the `jarremapper` extension configuration in [build.gradle](build.gradle) to add readers and engines
+1. Edit the `jarremapper` extension configuration in [build.gradle](com.pocolifo.jarremapper/build.gradle) to add readers and engines
 2. Run the `generateTests` Gradle task under the `jarremapperdev` group to generate test classes
 3. Test like normal

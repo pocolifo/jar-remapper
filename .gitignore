@@ -5,5 +5,6 @@ build/
 
 /output.jar
 
-src/test/resources/*
-src/test/java/com/pocolifo/jarremapper/tests/*
+jars
+mappings
+autogen

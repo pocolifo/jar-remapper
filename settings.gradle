@@ -1,10 +1,2 @@
-pluginManagement {
-    repositories {
-        maven {
-            url 'https://maven.services.pocolifo.com/releases'
-            name 'Pocolifo'
-        }
-    }
-}
-
-rootProject.name = 'jarremapper'
+include 'com.pocolifo.jarremapper'
+include 'com.pocolifo.jarremapper.extensions'
