@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+}
+
+group 'com.pocolifo.jarremapper'
+version '1.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+def pluginGroup = 'com.pocolifo.jarremapper.devplugin'
+
+gradlePlugin {
+    plugins {
+        jarRemapperDev {
+            implementationClass = "${pluginGroup}.JarRemapperDevPlugin"
+            id = pluginGroup
+        }
+    }
+}
+
+publishing {
+    publications {
+        plugin(MavenPublication) {
+            pom {
+                name = 'JAR Remapper Dev'
+                description = 'Developer plugin for JAR Remapper'
+                artifactId = 'devplugin'
+                version = System.getenv("RELEASE_VERSION") != null ? System.getenv("RELEASE_VERSION") : project.version
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://spdx.org/licenses/MIT.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'youngermax'
+                    }
+                }
+            }
+
+            from components['java']
+        }
+    }
+
+    repositories {
+        maven {
+            url System.getenv("REPO_URL")
+            name 'pocolifo'
+
+            credentials {
+                username = System.getenv("REPO_USERNAME")
+                password = System.getenv("REPO_PASSWORD")
+            }
+
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+}
