@@ -6,20 +6,20 @@ import java.util.List;
 public class ClassMapping {
     public final String fromClassName;
     public final String toClassName;
-
     public final JarMapping parentJar;
 
-    public ClassMapping(String fromClassName, String toClassName, JarMapping parentJar) {
-        this.fromClassName = fromClassName;
-        this.toClassName = toClassName;
-        this.parentJar = parentJar;
-    }
 
     // field mappings inside this class
     public final List<FieldMapping> fieldMappings = new ArrayList<>();
 
     // method mappings inside this class
     public final List<MethodMapping> methodMappings = new ArrayList<>();
+
+    public ClassMapping(String fromClassName, String toClassName, JarMapping parentJar) {
+        this.fromClassName = fromClassName;
+        this.toClassName = toClassName;
+        this.parentJar = parentJar;
+    }
 
     public MethodMapping getMethodByFromName(String fromName, String fromDesc) {
         for (MethodMapping methodMapping : this.methodMappings) {

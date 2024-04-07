@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     implementation project(':com.pocolifo.jarremapper')
-    implementation 'net.fabricmc:tiny-remapper:0.8.6'
+    implementation 'net.fabricmc:tiny-remapper:0.9.0'
     implementation 'net.md-5:SpecialSource:1.11.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'

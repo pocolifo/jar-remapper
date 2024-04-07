@@ -1,6 +1,7 @@
 package com.pocolifo.jarremapper.mapping;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MethodMapping {
@@ -10,6 +11,9 @@ public class MethodMapping {
     public final String toMethodDescriptor;
     public final ClassMapping parentClass;
 
+    public final List<String> exceptions = new ArrayList<>();
+    public final List<String> parameterNames = new LinkedList<>();
+
     public MethodMapping(String fromMethodName, String fromMethodDescriptor, String toMethodName,
                          String toMethodDescriptor, ClassMapping parentClass) {
         this.fromMethodName = fromMethodName;
@@ -18,9 +22,6 @@ public class MethodMapping {
         this.toMethodDescriptor = toMethodDescriptor;
         this.parentClass = parentClass;
     }
-
-    public List<String> exceptions = new ArrayList<>();
-    public List<String> parameterNames = new ArrayList<>();
 
     @Override
     public String toString() {
